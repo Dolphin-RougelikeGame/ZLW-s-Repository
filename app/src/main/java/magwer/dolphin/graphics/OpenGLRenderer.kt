@@ -10,7 +10,7 @@ class OpenGLRenderer(private val view: OpenGLView) : GLSurfaceView.Renderer {
 
     private val shapes = ArrayList<GLShape>()
     private var ratio = 1.0f
-    private val viewPort = OpenGLViewport()
+    val viewPort = OpenGLViewport()
 
     fun addShape(shape: GLShape) {
         synchronized(shapes) {

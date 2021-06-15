@@ -1,31 +1,9 @@
 package magwer.dolphin.game.generator
 
+import magwer.dolphin.api.Coord
 import java.lang.StringBuilder
 import java.util.*
 import kotlin.collections.HashMap
-
-typealias Coord = Pair<Int, Int>
-
-val Coord.adjacents
-    get() = arrayOf(
-        Coord(first - 1, second),
-        Coord(first + 1, second),
-        Coord(first, second - 1),
-        Coord(first, second + 1)
-    )
-
-val Coord.nearby
-    get() = arrayOf(
-        Coord(first - 1, second),
-        Coord(first + 1, second),
-        Coord(first, second - 1),
-        Coord(first, second + 1),
-
-        Coord(first - 1, second - 1),
-        Coord(first + 1, second - 1),
-        Coord(first + 1, second + 1),
-        Coord(first - 1, second + 1)
-    )
 
 class ChapterShapeGenerator(val random: Random) {
 

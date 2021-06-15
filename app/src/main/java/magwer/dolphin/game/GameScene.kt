@@ -9,7 +9,7 @@ import magwer.dolphin.physics.Collider
 import magwer.dolphin.physics.CollisionRule
 import kotlin.concurrent.timerTask
 
-class GameScene(private val game: Game) : RenderedScene,
+class GameScene(val game: Game) : RenderedScene,
     CollisionScene {
 
     override val collisionObjects = HashMap<Int, ArrayList<Collider<*>>>()

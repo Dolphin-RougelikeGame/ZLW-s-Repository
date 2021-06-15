@@ -33,4 +33,14 @@ class CollisionRule {
         return map[channel1 to channel2] == Rule.OVERLAP
     }
 
+    companion object {
+
+        const val PLAYER_CHANNEL = 1
+        const val STATIC_CHANNEL = 2
+        const val PHYSICAL_CHANNEL = 3
+        const val SPIRIT_CHANNEL = 4
+        const val VISION_CHANNEL = 5
+
+    }
+
 }

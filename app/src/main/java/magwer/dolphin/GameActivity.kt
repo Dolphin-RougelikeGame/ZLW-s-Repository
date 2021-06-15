@@ -7,6 +7,7 @@ import android.widget.ImageView
 import magwer.dolphin.game.Game
 import magwer.dolphin.game.GameScene
 import magwer.dolphin.game.MainCharacter
+import magwer.dolphin.game.TempBoxCharacter
 import magwer.dolphin.sound.LoopMusic
 import magwer.dolphin.ui.JoyStickControlTouchListener
 import java.util.*
@@ -31,7 +32,12 @@ class GameActivity : Activity() {
 
         timer.schedule(timerTask {
             MainCharacter(initialScene, leftcontroller).addToScene()
+            TempBoxCharacter(initialScene, 0, 0).addToScene()
+            TempBoxCharacter(initialScene, 0, 1).addToScene()
+            TempBoxCharacter(initialScene, 1, 1).addToScene()
+            TempBoxCharacter(initialScene, 1, 2).addToScene()
             initialScene.startTicking()
+            game.view.renderer.viewPort.scale = 0.5f
         }, 1000L)
 
         val m =
@@ -45,11 +51,6 @@ class GameActivity : Activity() {
                 2338,
                 6
             )
-        timer.schedule(timerTask {
-            while(game.soundManager.soundsToLoad.isNotEmpty());
-            game.soundManager.setMusic(
-            m
-        )}, 1)
 
 
         //val c = ChapterShapeGenerator(Random())

@@ -1,6 +1,10 @@
 package magwer.dolphin.game
 
-abstract class GameObject(var scene: GameScene) {
+abstract class GameObject(
+    var scene: GameScene,
+    var x: Double,
+    var y: Double
+) {
 
     open fun addToScene() {
         scene.internal_addGameObject(this)

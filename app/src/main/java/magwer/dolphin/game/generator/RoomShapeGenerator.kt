@@ -1,6 +1,9 @@
 package magwer.dolphin.game.generator
 
+import magwer.dolphin.api.Coord
+import magwer.dolphin.api.adjacents
 import magwer.dolphin.api.clamp
+import magwer.dolphin.api.nearby
 import kotlin.math.min
 
 class RoomShapeGenerator(

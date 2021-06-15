@@ -10,24 +10,22 @@ import magwer.dolphin.physics.RectangleBox
 import magwer.dolphin.ui.JoyStickControlTouchListener
 
 class MainCharacter(scene: GameScene, private val controller: JoyStickControlTouchListener) :
-    GameObject(scene),
+    GameObject(scene, 0.0, 0.0),
     RenderedObject {
 
-    var x = 0.0
-    var y = 0.0
     val width = 1.0
     val height = 1.0
 
     override val glShape = GLSquare(
         scene.view.shaderProgram,
         BitmapHolder(loadBitmapAsset(scene.context, "texture/main_character.png")),
-        0.0f,
-        0.0f,
+        gameToScreen(x - width * 0.5),
+        gameToScreen(y - height * 0.5),
         gameToScreen(width),
         gameToScreen(height)
     )
 
-    val collider = Collider(this, scene, RectangleBox(0.0, 0.0, width, height), 0)
+    val collider = Collider(this, scene, RectangleBox(x - width * 0.5, y - height * 0.5, width, height), 0)
 
     fun move(dx: Double, dy: Double) {
         if (dx == 0.0 && dy == 0.0)
@@ -47,12 +45,16 @@ class MainCharacter(scene: GameScene, private val controller: JoyStickControlTou
 
     fun updateLoc() {
         synchronized(collider.box) {
-            val newbox = collider.box.copyTo(x, y)
+            val newbox = collider.box.copyTo(x - width * 0.5, y - height * 0.5)
             collider.box = newbox
         }
-        glShape.screenX = gameToScreen(x)
-        glShape.screenY = gameToScreen(y)
+        glShape.screenX = gameToScreen(x - width * 0.5)
+        glShape.screenY = gameToScreen(y - height * 0.5)
         glShape.updateCoords()
+        scene.game.view.renderer.viewPort.let {
+            it.transX = gameToScreen(x)
+            it.transY = gameToScreen(y)
+        }
     }
 
     override fun addToScene() {
