@@ -12,8 +12,11 @@ import com.example.dolphin.bussiness.parts.EnemyTank;
 import com.example.dolphin.bussiness.parts.Explode;
 import com.example.dolphin.bussiness.parts.Missile;
 import com.example.dolphin.bussiness.parts.OursTank;
-import com.example.dolphin.bussiness.parts.UnbreakableWall;
+import com.example.dolphin.bussiness.parts.Floor;
+import com.example.dolphin.bussiness.parts.Treasure;
 import com.example.dolphin.bussiness.parts.Wall;
+import com.example.dolphin.bussiness.parts.Bar;
+import com.example.dolphin.bussiness.RoomRemodel;
 import com.example.dolphin.view.FireButton;
 import com.example.dolphin.view.SteeringWheelView;
 
@@ -65,7 +68,9 @@ public class FightingDelegage implements ITankHitHandler, IMissileHitHandler,
     private List<EnemyTank> enemyTanks;
     private List<Explode> explodes;
     private List<Wall> walls;
-    private List<UnbreakableWall> UnbreakableWalls;
+    private List<Floor> floors;
+    private List<Bar> bars;
+    private List<Treasure> treasures;
     private OursTank oursTank;
     /**
      * 控制消息
@@ -92,8 +97,10 @@ public class FightingDelegage implements ITankHitHandler, IMissileHitHandler,
         this.oursMissiles = new LinkedList<>();
         this.enemyTanks = new LinkedList<>();
         this.walls = new LinkedList<>();
-        this.UnbreakableWalls = new LinkedList<>();
+        this.floors = new LinkedList<>();
         this.explodes = new LinkedList<>();
+        this.bars = new LinkedList<>();
+        this.treasures = new LinkedList<>();
 
         test();
 
@@ -119,8 +126,8 @@ public class FightingDelegage implements ITankHitHandler, IMissileHitHandler,
     }
 
     /**
-     * 显示到界面, 将缓冲区中画好的图形绘制到surfaceview的canvas中
-     * @param canvas
+     * @description 显示到界面, 将缓冲区中画好的图形绘制到surfaceview的canvas中
+     * @param canvas 画布
      */
     public void draw(Canvas canvas, Context context) {
         if (null != canvas) {
@@ -165,8 +172,14 @@ public class FightingDelegage implements ITankHitHandler, IMissileHitHandler,
                     clearCanvas(mBufferCanvas);
 
                     //绘制开始
-                    for (int i = 0; i < UnbreakableWalls.size(); i++) {
-                        UnbreakableWalls.get(i).draw(mBufferCanvas);
+                    for (int i = 0; i < floors.size(); i++) {
+                        floors.get(i).draw(mBufferCanvas);
+                    }
+                    for (int i = 0; i < bars.size(); i++) {
+                        bars.get(i).draw(mBufferCanvas);
+                    }
+                    for (int i = 0; i < treasures.size(); i++) {
+                        treasures.get(i).draw(mBufferCanvas);
                     }
 
                     //敌方坦克
@@ -373,7 +386,7 @@ public class FightingDelegage implements ITankHitHandler, IMissileHitHandler,
         DOWN,
         LEFT,
         RIGHT,
-        STOP;
+        STOP
     }
 
     @Override
@@ -475,10 +488,22 @@ public class FightingDelegage implements ITankHitHandler, IMissileHitHandler,
     }
 
 // 定义地图数组
-    private int[][] MapArray = new int[140][100];
+    private static final int mapWidth  = 108;
+    private static final int mapHeight = 60;
+    static int[][] MapArray = new int[mapWidth][mapHeight];
     private Random random = new Random();
     private int turn = random.nextInt(4);
-    public void makeRoom(int roomX_init, int roomY_init, int roomX_len, int roomY_len, int init_x, int init_y) {
+
+    /**
+     * @description 生成房间
+     * @param roomX_init 本房间左上角X坐标
+     * @param roomX_len  本房间长度
+     * @param roomY_init 本房间左上角Y坐标
+     * @param roomY_len  本房间宽度
+     * @param init_x     本房间中心X坐标
+     * @param init_y     本房间中心Y坐标
+     */
+    private void makeRoom(int roomX_init, int roomY_init, int roomX_len, int roomY_len, int init_x, int init_y) {
         // 如果到了边界就停止扩展
         if (init_x >= roomX_len - 1 + roomX_init || init_y >= roomY_len - 1 + roomY_init || init_x <= roomX_init || init_y <= roomY_init)
             return;
@@ -486,51 +511,112 @@ public class FightingDelegage implements ITankHitHandler, IMissileHitHandler,
         if (roomLimit.RoomShapeFeature()) {
             turn = (turn + 1) % 4;
         }
+
+        MapArray[init_x + 1][init_y] = RoomRemodel.FLOOR;
+        MapArray[init_x][init_y + 1] = RoomRemodel.FLOOR;
+        MapArray[init_x - 1][init_y] = RoomRemodel.FLOOR;
+        MapArray[init_x][init_y - 1] = RoomRemodel.FLOOR;
+
         switch (turn) {
             case 0:
-                MapArray[init_x + 1][init_y] = 1;
-                MapArray[init_x][init_y + 1] = 1;
-                MapArray[init_x - 1][init_y] = 1;
-                MapArray[init_x][init_y - 1] = 1;
                 makeRoom(roomX_init, roomY_init, roomX_len, roomY_len, init_x + 1, init_y);
                 break;
             case 1:
-                MapArray[init_x + 1][init_y] = 1;
-                MapArray[init_x][init_y + 1] = 1;
-                MapArray[init_x - 1][init_y] = 1;
-                MapArray[init_x][init_y - 1] = 1;
                 makeRoom(roomX_init, roomY_init, roomX_len, roomY_len, init_x - 1, init_y);
                 break;
             case 2:
-                MapArray[init_x + 1][init_y] = 1;
-                MapArray[init_x][init_y + 1] = 1;
-                MapArray[init_x - 1][init_y] = 1;
-                MapArray[init_x][init_y - 1] = 1;
                 makeRoom(roomX_init, roomY_init, roomX_len, roomY_len, init_x, init_y + 1);
                 break;
             case 3:
-                MapArray[init_x + 1][init_y] = 1;
-                MapArray[init_x][init_y + 1] = 1;
-                MapArray[init_x - 1][init_y] = 1;
-                MapArray[init_x][init_y - 1] = 1;
                 makeRoom(roomX_init, roomY_init, roomX_len, roomY_len, init_x, init_y - 1);
                 break;
             default:
                 break;
         }
-
     }
+
+    /**
+     * @description 生成通道
+     * @param roomX_init 上一房间左上角X坐标
+     * @param roomX_len  上一房间长度
+     * @param roomY_init 上一房间左上角Y坐标
+     * @param roomY_len  上一房间宽度
+     * @param init_x     上一房间中心X坐标
+     * @param init_y     上一房间中心Y坐标
+     * @param kind       横向或纵向走廊
+     */
+    private void makePassWay(int roomX_init, int roomY_init, int roomX_len, int roomY_len, int init_x, int init_y, int kind){
+        int passWay_X ;
+        int passWay_Y ;
+        int passWayLen = 10; //走廊长度
+
+        // 横向走廊
+        if(kind == 0){
+            passWay_X = roomX_init + roomX_len;
+            passWay_Y = init_y;
+
+            while (MapArray[passWay_X][passWay_Y] == RoomRemodel.WALL) {
+                passWay_X--;
+                passWayLen++;
+            }
+
+            for (int i = 0; i < passWayLen; i++) {
+                MapArray[passWay_X + i][passWay_Y] = RoomRemodel.FLOOR;
+            }
+        }
+
+        //纵向走廊
+        if(kind == 1){
+            passWay_X = init_x;
+            passWay_Y = roomY_init + roomY_len;
+            while (MapArray[passWay_X][passWay_Y] == RoomRemodel.WALL) {
+                passWay_Y--;
+                passWayLen++;
+            }
+            for (int i = 0; i < passWayLen; i++) {
+                MapArray[passWay_X][passWay_Y + i] = RoomRemodel.FLOOR;
+            }
+        }
+    }
+
+    /**
+     * @description 生成房间
+     * @param roomX_init 本房间左上角X坐标
+     * @param roomX_len  本房间长度
+     * @param roomY_init 本房间左上角Y坐标
+     * @param roomY_len  本房间宽度
+     * @param init_x     本房间中心X坐标
+     * @param init_y     本房间中心Y坐标
+     * @param kind       房间类型
+     */
+    private void roomRemodel(int roomX_init, int roomY_init, int roomX_len, int roomY_len, int init_x, int init_y, int kind){
+        // 初始化RoomRemodel方法对象
+        RoomRemodel remodel = new RoomRemodel();
+        switch (kind){
+            case RoomRemodel.REWARD:
+                remodel.remodelTreasure(roomX_init, roomY_init, roomX_len, roomY_len, init_x, init_y);
+                break;
+            case RoomRemodel.NORMAL:
+                remodel.remodelNormal(roomX_init, roomY_init, roomX_len, roomY_len, init_x, init_y);
+                break;
+            case RoomRemodel.BOSS:
+                remodel.remodelBoss(roomX_init, roomY_init, roomX_len, roomY_len, init_x, init_y);
+                break;
+        }
+    }
+
+
 
     public void test() {
         // 初始化roomLimit对象
         roomLimit = new RoomLimit(0.5f, 0.5f, 0.5f);
 
         // 初始化地图数组
-        for (int i = 0; i < 140; i++)
-            for (int j = 0; j < 100; j++)
-                MapArray[i][j] = 0;
+        for (int i = 0; i < mapWidth; i++)
+            for (int j = 0; j < mapHeight; j++)
+                MapArray[i][j] = RoomRemodel.WALL;
 
-        // 地板大小、房间大小、初始位置设置为中心
+        // 设置房间一
         int floorSize = 40;
         int temp = roomLimit.RoomSizeFeature();
 
@@ -541,23 +627,14 @@ public class FightingDelegage implements ITankHitHandler, IMissileHitHandler,
 
         int init_x = roomX_1_init + (int) (roomX_1_len / 2);
         int init_y = roomY_1_init + (int) (roomY_1_len / 2);
-        MapArray[init_x][init_y] = 1;
+        MapArray[init_x][init_y] = RoomRemodel.FLOOR;
 
-        // 调用makeRoom制作地图
+        // 调用makeRoom制作地图并加入障碍物
         makeRoom(roomX_1_init, roomY_1_init, roomX_1_len, roomY_1_len, init_x, init_y);
+        roomRemodel(roomX_1_init, roomY_1_init, roomX_1_len, roomY_1_len, init_x, init_y, RoomRemodel.NORMAL);
 
         // 制作房间1和2之间的通道
-        int passWay_X = roomX_1_init + roomX_1_len;
-        int passWay_Y = init_y;
-        int passLen = 10;
-        while (MapArray[passWay_X][passWay_Y] == 0) {
-            passWay_X--;
-            passLen++;
-        }
-        for (int i = 0; i < passLen; i++) {
-            MapArray[passWay_X + i][passWay_Y] = 1;
-        }
-        // ↑↑ 房间通道制作完毕
+        makePassWay(roomX_1_init, roomY_1_init, roomX_1_len, roomY_1_len, init_x, init_y, 0);
 
         // 房间2的开始
         temp = roomLimit.RoomSizeFeature();
@@ -567,40 +644,51 @@ public class FightingDelegage implements ITankHitHandler, IMissileHitHandler,
         int roomY_2_init = roomY_1_init;
         init_x = roomX_2_init + roomX_2_len / 2;
         init_y = roomY_2_init + roomY_2_len / 2;
-        MapArray[init_x][init_y] = 1;
+        MapArray[init_x][init_y] = RoomRemodel.FLOOR;
         makeRoom(roomX_2_init, roomY_2_init, roomX_2_len, roomY_2_len, init_x, init_y);
+        roomRemodel(roomX_2_init, roomY_2_init, roomX_2_len, roomY_2_len, init_x, init_y, RoomRemodel.BOSS);
         // 房间2结束
 
         // 制作房间2和3之间的通道
-        passWay_X = init_x;
-        passWay_Y = roomY_2_init + roomY_2_len;
-        passLen = 10;
-        while (MapArray[passWay_X][passWay_Y] == 0) {
-            passWay_Y--;
-            passLen++;
-        }
-        for (int i = 0; i < passLen; i++) {
-            MapArray[passWay_X][passWay_Y + i] = 1;
-        }
-        // ↑↑ 房间通道制作完毕
+        makePassWay(roomX_2_init, roomY_2_init, roomX_2_len, roomY_2_len, init_x, init_y, 1);
 
         // 房间3的开始
         temp = roomLimit.RoomSizeFeature();
         int roomY_3_len = temp;
         int roomX_3_len = (int) (temp * 1.4);
         int roomX_3_init = roomX_2_init;
-        int roomY_3_init = roomY_2_init + roomY_3_len + roomLimit.RoomRejectFeature();
+        int roomY_3_init = roomY_2_init + roomY_2_len + roomLimit.RoomRejectFeature();
         init_x = roomX_3_init + roomX_3_len / 2;
         init_y = roomY_3_init + roomY_3_len / 2;
-        MapArray[init_x][init_y] = 1;
+        MapArray[init_x][init_y] = RoomRemodel.FLOOR;
         makeRoom(roomX_3_init, roomY_3_init, roomX_3_len, roomY_3_len, init_x, init_y);
+        roomRemodel(roomX_3_init, roomY_3_init, roomX_3_len, roomY_3_len, init_x, init_y, RoomRemodel.REWARD);
         // 房间3的结束
 
         // 将存在MapArray中的地图画出来
-        for (int i = 0; i < 140; i++)
-            for (int j = 0; j < 100; j++)
-                if (MapArray[i][j] == 1)
-                    UnbreakableWalls.add(new UnbreakableWall(floorSize * i, floorSize * j, context));
+        for (int i = 0; i < mapWidth; i++){
+            for (int j = 0; j < mapHeight; j++){
+                if (MapArray[i][j] == RoomRemodel.FLOOR)
+                    floors.add(new Floor(floorSize * i, floorSize * j, context));
+                if (MapArray[i][j] == RoomRemodel.BAR)
+                    bars.add(new Bar(floorSize * i, floorSize * j, context));
+                if (MapArray[i][j] == RoomRemodel.TREASURE)
+                    treasures.add(new Treasure(floorSize * i, floorSize * j, context));
+            }
+        }
+
+
+//        enemyTanks.add(new EnemyTank(1000, 1000, mWidth, mHeight, Direction.LEFT));
+//        enemyTanks.add(new EnemyTank(1100, 1100, mWidth, mHeight, Direction.LEFT));
+//        enemyTanks.add(new EnemyTank(mWidth - 100, 100, mWidth, mHeight, Direction.UP));
+//        enemyTanks.add(new EnemyTank(mWidth - 1000, 1000, mWidth, mHeight, Direction.LEFT));
+//
+//        for (EnemyTank enemyTank : enemyTanks) {
+//            enemyTank.setHitHandler(this);
+//        }
+//
+//        oursTank = new OursTank(mWidth / 2, mHeight / 2, mWidth, mHeight, Direction.LEFT);
+//        oursTank.setHitHandler(this);
 
         translateX = 0;
         translateY = 0;

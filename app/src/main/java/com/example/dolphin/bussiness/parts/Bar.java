@@ -1,5 +1,10 @@
 package com.example.dolphin.bussiness.parts;
 
+/**
+ * @anthor: zlw
+ * @date: 2021/6/15
+ */
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,14 +14,14 @@ import android.graphics.Paint;
 
 import com.example.dolphin.R;
 
-public class UnbreakableWall extends Wall {
-    private Paint UnbreakablePaint;
+public class Bar extends Wall {
+    private Paint BarPaint;
 
     private Bitmap bitmap;
 
-    public UnbreakableWall(float x, float y, Context context) {
+    public Bar(float x, float y, Context context) {
         super(x, y);
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.box).copy(Bitmap.Config.ARGB_8888, true);
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.stone).copy(Bitmap.Config.ARGB_8888, true);
 
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
@@ -30,7 +35,7 @@ public class UnbreakableWall extends Wall {
         bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
     }
 
-    public UnbreakableWall(float x, float y, float width, float height) {
+    public Bar(float x, float y, float width, float height) {
         super(x, y, width, height);
     }
 
@@ -43,3 +48,4 @@ public class UnbreakableWall extends Wall {
     protected void onDraw(Canvas canvas) {
     }
 }
+
