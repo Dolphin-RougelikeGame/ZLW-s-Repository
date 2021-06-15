@@ -5,9 +5,8 @@ import magwer.dolphin.api.RenderedObject
 import magwer.dolphin.api.loadBitmapAsset
 import magwer.dolphin.graphics.GLSquare
 
-class TempBoxCharacter(scene: GameScene, wallX: Int, wallY: Int) :
-    GameObject(scene, wallX.toDouble(), wallY.toDouble()),
-    RenderedObject {
+class TempBoxCharacter(scene: GameScene, val x: Int, val y: Int) :
+    GameObject(scene), RenderedObject {
 
     val width = 1.0
     val height = 1.0

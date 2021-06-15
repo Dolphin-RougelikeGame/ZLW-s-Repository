@@ -2,17 +2,21 @@ package magwer.dolphin.game
 
 import magwer.dolphin.animation.Animation
 import magwer.dolphin.animation.BitmapHolder
+import magwer.dolphin.api.Coord
 import magwer.dolphin.api.RenderedObject
 import magwer.dolphin.api.loadBitmapAsset
+import magwer.dolphin.game.room.RoomGrid
 import magwer.dolphin.graphics.GLSquare
 import magwer.dolphin.physics.Collider
 import magwer.dolphin.physics.RectangleBox
 import magwer.dolphin.ui.JoyStickControlTouchListener
 
 class MainCharacter(scene: GameScene, private val controller: JoyStickControlTouchListener) :
-    GameObject(scene, 0.0, 0.0),
+    GameObject(scene),
     RenderedObject {
 
+    var x = 0.0
+    var y = 0.0
     val width = 1.0
     val height = 1.0
 
@@ -52,13 +56,14 @@ class MainCharacter(scene: GameScene, private val controller: JoyStickControlTou
         glShape.screenY = gameToScreen(y - height * 0.5)
         glShape.updateCoords()
         scene.game.view.renderer.viewPort.let {
-            it.transX = gameToScreen(x)
-            it.transY = gameToScreen(y)
+            it.transX = -gameToScreen(x)
+            it.transY = -gameToScreen(y)
         }
     }
 
     override fun addToScene() {
         super.addToScene()
+
         scene.animationManager.startAnimation(
             glShape.texture,
             Animation(
@@ -79,6 +84,10 @@ class MainCharacter(scene: GameScene, private val controller: JoyStickControlTou
         val mx = controller.strengthX * deltaTime * 0.004
         val my = -controller.strengthY * deltaTime * 0.004
         move(mx, my)
+    }
+
+    override fun getRoomCoords(roomGrid: RoomGrid): ArrayList<Coord>? {
+        return arrayListOf(roomGrid.gameToRoom(x, y))
     }
 
 }

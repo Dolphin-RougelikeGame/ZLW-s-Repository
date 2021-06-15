@@ -1,9 +1,10 @@
 package magwer.dolphin.game
 
+import magwer.dolphin.api.Coord
+import magwer.dolphin.game.room.RoomGrid
+
 abstract class GameObject(
-    var scene: GameScene,
-    var x: Double,
-    var y: Double
+    var scene: GameScene
 ) {
 
     open fun addToScene() {
@@ -23,6 +24,10 @@ abstract class GameObject(
 
     fun gameToScreen(coord: Double): Float {
         return (coord * 0.1).toFloat()
+    }
+
+    open fun getRoomCoords(roomGrid: RoomGrid): ArrayList<Coord>? {
+        return null
     }
 
     abstract fun onTick(deltaTime: Long)

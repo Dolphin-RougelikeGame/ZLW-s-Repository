@@ -22,7 +22,6 @@ class GameActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         val leftcontrol = findViewById<FrameLayout>(R.id.left_control)
         val leftcontrolcenter = findViewById<ImageView>(R.id.left_control_center)
         val leftcontroller = JoyStickControlTouchListener(leftcontrol, leftcontrolcenter)

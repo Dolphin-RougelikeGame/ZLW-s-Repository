@@ -11,16 +11,16 @@ typealias Coord = Pair<Int, Int>
 val Coord.adjacents
     get() = arrayOf(
         Coord(first - 1, second),
-        Coord(first + 1, second),
         Coord(first, second - 1),
+        Coord(first + 1, second),
         Coord(first, second + 1)
     )
 
 val Coord.nearby
     get() = arrayOf(
         Coord(first - 1, second),
-        Coord(first + 1, second),
         Coord(first, second - 1),
+        Coord(first + 1, second),
         Coord(first, second + 1),
 
         Coord(first - 1, second - 1),
@@ -28,6 +28,20 @@ val Coord.nearby
         Coord(first + 1, second + 1),
         Coord(first - 1, second + 1)
     )
+
+val Coord.conners
+    get() = arrayOf(
+        Coord(first - 1, second - 1),
+        Coord(first + 1, second - 1),
+        Coord(first + 1, second + 1),
+        Coord(first - 1, second + 1)
+    )
+
+fun Coord.distanceSquared(c: Coord): Int {
+    val dx = first - c.first
+    val dy = second - c.second
+    return dx * dx + dy * dy
+}
 
 fun clamp(a: Double, min: Double, max: Double): Double {
     if (a < min)

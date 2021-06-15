@@ -2,11 +2,23 @@ package magwer.dolphin.physics
 
 import magwer.dolphin.api.CollisionScene
 import magwer.dolphin.game.GameObject
+import magwer.dolphin.game.GameScene
 
-class Collider<T: CollisionBox>(val owner: GameObject, val scene: CollisionScene, var box: T, val channel: Int) {
+class Collider<T: CollisionBox>(val owner: GameObject, var scene: CollisionScene, var box: T, val channel: Int) {
 
-    init {
+    fun addToScene() {
         scene.internal_addCollisionObject(this)
+    }
+
+    fun removeFromScene() {
+        scene.internal_removeCollisionObject(this)
+    }
+
+    fun changeScene(newScene: CollisionScene) {
+        if (scene == newScene)
+            return
+        scene.internal_removeCollisionObject(this)
+        scene = newScene
     }
 
     fun checkCollision(box: CollisionBox = this.box): Pair<ArrayList<Collider<*>>, ArrayList<Collider<*>>> {
