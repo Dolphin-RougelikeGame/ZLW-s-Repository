@@ -1,5 +1,7 @@
 package magwer.dolphin.game
 
+import magwer.dolphin.animation.Animation
+import magwer.dolphin.animation.BitmapHolder
 import magwer.dolphin.api.RenderedObject
 import magwer.dolphin.api.loadBitmapAsset
 import magwer.dolphin.graphics.GLSquare
@@ -7,7 +9,8 @@ import magwer.dolphin.physics.Collider
 import magwer.dolphin.physics.RectangleBox
 import magwer.dolphin.ui.JoyStickControlTouchListener
 
-class MainCharacter(scene: GameScene, private val controller: JoyStickControlTouchListener) : GameObject(scene),
+class MainCharacter(scene: GameScene, private val controller: JoyStickControlTouchListener) :
+    GameObject(scene),
     RenderedObject {
 
     var x = 0.0
@@ -17,7 +20,7 @@ class MainCharacter(scene: GameScene, private val controller: JoyStickControlTou
 
     override val glShape = GLSquare(
         scene.view.shaderProgram,
-        loadBitmapAsset(scene.context, "texture/main_character.png"),
+        BitmapHolder(loadBitmapAsset(scene.context, "texture/main_character.png")),
         0.0f,
         0.0f,
         gameToScreen(width),
@@ -52,9 +55,27 @@ class MainCharacter(scene: GameScene, private val controller: JoyStickControlTou
         glShape.updateCoords()
     }
 
+    override fun addToScene() {
+        super.addToScene()
+        scene.animationManager.startAnimation(
+            glShape.texture,
+            Animation(
+                800,
+                true,
+                loadBitmapAsset(scene.context, "texture/main_character.png"),
+                loadBitmapAsset(scene.context, "texture/main_character1.png")
+            )
+        )
+    }
+
+    override fun removeFromScene() {
+        super.removeFromScene()
+        scene.animationManager.stopAnimation(glShape.texture)
+    }
+
     override fun onTick(deltaTime: Long) {
         val mx = controller.strengthX * deltaTime * 0.004
-        val my = - controller.strengthY * deltaTime * 0.004
+        val my = -controller.strengthY * deltaTime * 0.004
         move(mx, my)
     }
 

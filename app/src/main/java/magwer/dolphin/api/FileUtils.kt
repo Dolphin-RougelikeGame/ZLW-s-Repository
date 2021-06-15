@@ -6,6 +6,14 @@ import android.graphics.BitmapFactory
 import java.io.*
 import java.util.*
 
+fun clamp(a: Double, min: Double, max: Double): Double {
+    if (a < min)
+        return min
+    if (a > max)
+        return max
+    return a
+}
+
 fun loadBitmapAsset(context: Context, fileName: String): Bitmap {
     var ins: InputStream? = null
     try {

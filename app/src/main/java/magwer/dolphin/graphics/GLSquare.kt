@@ -3,10 +3,11 @@ package magwer.dolphin.graphics
 import android.graphics.Bitmap
 import android.opengl.GLES20
 import android.opengl.GLUtils
+import magwer.dolphin.animation.BitmapHolder
 
 class GLSquare(
     private val shaderProgram: Int,
-    var texture: Bitmap,
+    val texture: BitmapHolder,
     var screenX: Float,
     var screenY: Float,
     var screenWidth: Float,
@@ -21,6 +22,7 @@ class GLSquare(
     private var texturePosHandle = 0
     private var viewportHandle = 0
     private var textureId = 0
+    private var oldBitmap: Bitmap? = null
 
     private fun getCoords(): FloatArray {
         return floatArrayOf(
@@ -58,7 +60,7 @@ class GLSquare(
                 GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT)
                 GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR)
                 GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR)
-                GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, texture, 0)
+                GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, texture.bitmap, 0)
                 id
             }
             return
@@ -67,6 +69,12 @@ class GLSquare(
 
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId)
+
+        val newbitmap = texture.bitmap
+        if (oldBitmap != newbitmap) {
+            GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, texture.bitmap, 0)
+            oldBitmap = newbitmap
+        }
 
         GLES20.glEnableVertexAttribArray(vertexHandle)
         GLES20.glVertexAttribPointer(

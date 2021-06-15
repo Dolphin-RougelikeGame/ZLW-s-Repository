@@ -1,4 +1,8 @@
-package magwer.dolphin.physics
+package magwer.dolphin.api
+
+import magwer.dolphin.physics.Collider
+import magwer.dolphin.physics.CollisionBox
+import magwer.dolphin.physics.CollisionRule
 
 interface CollisionScene {
 

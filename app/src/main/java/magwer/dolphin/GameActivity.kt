@@ -2,31 +2,25 @@ package magwer.dolphin
 
 import android.app.Activity
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
-import magwer.dolphin.api.loadBitmapAsset
 import magwer.dolphin.game.GameScene
 import magwer.dolphin.game.MainCharacter
-import magwer.dolphin.graphics.GLSquare
+import magwer.dolphin.game.generator.ChapterShapeGenerator
+import magwer.dolphin.game.generator.RoomShapeGenerator
 import magwer.dolphin.ui.JoyStickControlTouchListener
 import java.util.*
 import kotlin.concurrent.timerTask
-import kotlin.math.sqrt
 
 class GameActivity : Activity() {
 
+    private val gameScene by lazy { GameScene(findViewById(R.id.openGLView)) }
     private val timer by lazy { Timer() }
-    private var gameScene: GameScene? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        gameScene = GameScene(findViewById(R.id.openGLView))
-
-        gameScene!!.startTicking(timer)
 
         val leftcontrol = findViewById<FrameLayout>(R.id.left_control)
         val leftcontrolcenter = findViewById<ImageView>(R.id.left_control_center)
@@ -34,14 +28,30 @@ class GameActivity : Activity() {
         leftcontrol.setOnTouchListener(leftcontroller)
 
         timer.schedule(timerTask {
-            MainCharacter(gameScene!!, leftcontroller).addToScene()
+            MainCharacter(gameScene, leftcontroller).addToScene()
+            gameScene.startTicking()
         }, 1000L)
+
+        //val c = ChapterShapeGenerator(Random())
+        //val a = RoomShapeGenerator(c, 50 to 50, 30, 0.6, 1.0, 1.0)
+//
+        //while (true) {
+        //    val success = a.trySpread()
+        //    if (!success)
+        //        return
+        //    val list = c.generateMap(0, 0, 100, 100)
+        //    for (line in list)
+        //        println(line)
+        //    println()
+        //    println()
+        //}
 
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        timer.cancel()
+
+        gameScene.shutdown()
     }
 
 }

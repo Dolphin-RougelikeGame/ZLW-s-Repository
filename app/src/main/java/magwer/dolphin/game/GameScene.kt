@@ -1,21 +1,25 @@
 package magwer.dolphin.game
 
+import magwer.dolphin.animation.AnimationManager
 import magwer.dolphin.api.RenderedObject
 import magwer.dolphin.api.RenderedScene
 import magwer.dolphin.graphics.OpenGLView
 import magwer.dolphin.physics.Collider
 import magwer.dolphin.physics.CollisionRule
-import magwer.dolphin.physics.CollisionScene
+import magwer.dolphin.api.CollisionScene
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.concurrent.timerTask
 
-class GameScene(override val view: OpenGLView) : RenderedScene, CollisionScene {
+class GameScene(override val view: OpenGLView) : RenderedScene,
+    CollisionScene {
 
     override val collisionObjects = HashMap<Int, ArrayList<Collider<*>>>()
     override val collisionRule = CollisionRule()
     private val gameObjects = ArrayList<GameObject>()
+    private val timer = Timer()
+    val animationManager = AnimationManager()
 
     val context
         get() = view.context
@@ -47,13 +51,18 @@ class GameScene(override val view: OpenGLView) : RenderedScene, CollisionScene {
         }
     }
 
-    fun startTicking(timer: Timer) {
+    fun startTicking() {
         var lastTick = System.currentTimeMillis()
         timer.scheduleAtFixedRate(timerTask {
             val old = lastTick
             lastTick = System.currentTimeMillis()
             onTick(lastTick - old)
         }, 0L, 50L)
+    }
+
+    fun shutdown() {
+        timer.cancel()
+        animationManager.shutdown()
     }
 
 }
