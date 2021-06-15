@@ -4,17 +4,17 @@ import android.app.Activity
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.ImageView
+import magwer.dolphin.game.Game
 import magwer.dolphin.game.GameScene
 import magwer.dolphin.game.MainCharacter
-import magwer.dolphin.game.generator.ChapterShapeGenerator
-import magwer.dolphin.game.generator.RoomShapeGenerator
+import magwer.dolphin.sound.LoopMusic
 import magwer.dolphin.ui.JoyStickControlTouchListener
 import java.util.*
 import kotlin.concurrent.timerTask
 
 class GameActivity : Activity() {
 
-    private val gameScene by lazy { GameScene(findViewById(R.id.openGLView)) }
+    private val game by lazy { Game(findViewById(R.id.openGLView)) }
     private val timer by lazy { Timer() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,10 +27,25 @@ class GameActivity : Activity() {
         val leftcontroller = JoyStickControlTouchListener(leftcontrol, leftcontrolcenter)
         leftcontrol.setOnTouchListener(leftcontroller)
 
+        val initialScene = GameScene(game)
+
         timer.schedule(timerTask {
-            MainCharacter(gameScene, leftcontroller).addToScene()
-            gameScene.startTicking()
+            MainCharacter(initialScene, leftcontroller).addToScene()
+            initialScene.startTicking()
         }, 1000L)
+
+        game.soundManager.setMusic(
+            LoopMusic(
+                game.soundManager,
+                "airbattlecombat/",
+                1.0,
+                9,
+                10092,
+                4536,
+                2338,
+                6
+            )
+        )
 
         //val c = ChapterShapeGenerator(Random())
         //val a = RoomShapeGenerator(c, 50 to 50, 30, 0.6, 1.0, 1.0)
@@ -51,7 +66,7 @@ class GameActivity : Activity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        gameScene.shutdown()
+        game.shutdown()
     }
 
 }

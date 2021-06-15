@@ -8,6 +8,8 @@ class AnimationManager {
     private val timer = Timer()
     private val animations = HashMap<BitmapHolder, AnimationTask>()
 
+    var paused = false
+
     fun startAnimation(holder: BitmapHolder, anim: Animation) {
         synchronized(this) {
             animations.remove(holder)?.cancel()

@@ -1,7 +1,6 @@
 package magwer.dolphin.animation
 
 import java.util.*
-import kotlin.concurrent.timerTask
 
 class AnimationTask(private val manager: AnimationManager, private val holder: BitmapHolder, val anim: Animation) : TimerTask() {
 
@@ -9,6 +8,8 @@ class AnimationTask(private val manager: AnimationManager, private val holder: B
 
     override fun run() {
         synchronized(manager) {
+            if (manager.paused)
+                return
             holder.bitmap = anim.images[i++]
             if (i == anim.images.size)
                 if (anim.repeat)

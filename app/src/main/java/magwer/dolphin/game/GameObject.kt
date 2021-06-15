@@ -1,6 +1,6 @@
 package magwer.dolphin.game
 
-abstract class GameObject(val scene: GameScene) {
+abstract class GameObject(var scene: GameScene) {
 
     open fun addToScene() {
         scene.internal_addGameObject(this)
@@ -8,6 +8,13 @@ abstract class GameObject(val scene: GameScene) {
 
     open fun removeFromScene() {
         scene.internal_removeGameObject(this)
+    }
+
+    open fun changeScene(newScene: GameScene) {
+        if (scene == newScene)
+            return
+        scene.internal_removeGameObject(this)
+        scene = newScene
     }
 
     fun gameToScreen(coord: Double): Float {
