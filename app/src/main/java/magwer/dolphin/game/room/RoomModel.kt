@@ -1,16 +1,8 @@
 package magwer.dolphin.game.room
 
-class RoomModel(val width: Int, val height: Int) {
+import magwer.dolphin.room.RoomRemodel.SlotType
 
-    enum class SlotType {
-
-        WALL,
-        INSIDE,
-        PORTAL,
-        NONE
-
-    }
-
-    val matrix = Array(width) { Array(height) { SlotType.NONE} }
-
+class RoomModel(val matrix: Array<Array<SlotType>>) {
+    val width = 27;
+    val height = 15;
 }

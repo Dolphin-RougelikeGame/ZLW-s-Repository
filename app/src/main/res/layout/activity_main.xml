@@ -21,6 +21,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <magwer.dolphin.room.FightingView
+            android:id="@+id/v_fighting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <FrameLayout
             android:id="@+id/left_control"
             android:layout_width="200dp"
