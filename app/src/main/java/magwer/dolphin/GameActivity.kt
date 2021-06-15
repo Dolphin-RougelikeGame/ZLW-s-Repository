@@ -34,7 +34,7 @@ class GameActivity : Activity() {
             initialScene.startTicking()
         }, 1000L)
 
-        game.soundManager.setMusic(
+        val m =
             LoopMusic(
                 game.soundManager,
                 "airbattlecombat/",
@@ -45,7 +45,12 @@ class GameActivity : Activity() {
                 2338,
                 6
             )
-        )
+        timer.schedule(timerTask {
+            while(game.soundManager.soundsToLoad.isNotEmpty());
+            game.soundManager.setMusic(
+            m
+        )}, 1)
+
 
         //val c = ChapterShapeGenerator(Random())
         //val a = RoomShapeGenerator(c, 50 to 50, 30, 0.6, 1.0, 1.0)

@@ -57,6 +57,13 @@ class LoopMusic(
     var loopTask: LoopTask? = null
     var stopTask: StopTask? = null
 
+    init {
+        manager.loadSound(filePath + "start.ogg")
+        manager.loadSound(filePath + "end.ogg")
+        for (i in 1..maxloops)
+            manager.loadSound(filePath + "$i.ogg")
+    }
+
     override fun start() {
         stopping = false
         endStage = false
