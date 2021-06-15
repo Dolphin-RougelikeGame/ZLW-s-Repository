@@ -4,6 +4,7 @@ import magwer.dolphin.animation.AnimationManager
 import magwer.dolphin.api.CollisionScene
 import magwer.dolphin.api.RenderedObject
 import magwer.dolphin.api.RenderedScene
+import magwer.dolphin.game.`object`.GameObject
 import magwer.dolphin.graphics.OpenGLView
 import magwer.dolphin.physics.Collider
 import magwer.dolphin.physics.CollisionRule

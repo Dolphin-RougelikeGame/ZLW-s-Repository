@@ -4,7 +4,7 @@ import magwer.dolphin.api.Coord
 import magwer.dolphin.api.adjacents
 import magwer.dolphin.api.conners
 import magwer.dolphin.api.distanceSquared
-import magwer.dolphin.game.GameObject
+import magwer.dolphin.game.`object`.GameObject
 import magwer.dolphin.physics.Collider
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -20,7 +20,6 @@ class RoomGrid(
     class PathNode(val coord: Coord, val before: PathNode?, cost: Int) {
 
         val totalCost: Int = before?.totalCost ?: 0 + cost
-
 
     }
 

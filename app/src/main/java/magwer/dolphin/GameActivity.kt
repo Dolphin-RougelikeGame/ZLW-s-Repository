@@ -6,7 +6,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import magwer.dolphin.game.Game
 import magwer.dolphin.game.GameScene
-import magwer.dolphin.game.MainCharacter
+import magwer.dolphin.game.`object`.MainCharacter
 import magwer.dolphin.game.TempBoxCharacter
 import magwer.dolphin.sound.LoopMusic
 import magwer.dolphin.ui.JoyStickControlTouchListener
@@ -30,7 +30,10 @@ class GameActivity : Activity() {
         val initialScene = GameScene(game)
 
         timer.schedule(timerTask {
-            MainCharacter(initialScene, leftcontroller).addToScene()
+            MainCharacter(
+                initialScene,
+                leftcontroller
+            ).addToScene()
             TempBoxCharacter(initialScene, 0, 0).addToScene()
             TempBoxCharacter(initialScene, 0, 1).addToScene()
             TempBoxCharacter(initialScene, 1, 1).addToScene()

@@ -1,12 +1,13 @@
-package magwer.dolphin.game
+package magwer.dolphin.game.`object`
 
 import magwer.dolphin.api.Coord
+import magwer.dolphin.game.GameScene
 import magwer.dolphin.game.room.RoomGrid
 import magwer.dolphin.physics.Collider
 import magwer.dolphin.physics.CollisionRule
 import magwer.dolphin.physics.RectangleBox
 
-class RoomWallStaticObject(
+class RoomStaticObject(
     scene: GameScene,
     val x: Int,
     val y: Int,

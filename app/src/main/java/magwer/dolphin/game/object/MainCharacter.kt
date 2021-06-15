@@ -1,10 +1,11 @@
-package magwer.dolphin.game
+package magwer.dolphin.game.`object`
 
 import magwer.dolphin.animation.Animation
 import magwer.dolphin.animation.BitmapHolder
 import magwer.dolphin.api.Coord
 import magwer.dolphin.api.RenderedObject
 import magwer.dolphin.api.loadBitmapAsset
+import magwer.dolphin.game.GameScene
 import magwer.dolphin.game.room.RoomGrid
 import magwer.dolphin.graphics.GLSquare
 import magwer.dolphin.physics.Collider
@@ -47,7 +48,7 @@ class MainCharacter(scene: GameScene, private val controller: JoyStickControlTou
         updateLoc()
     }
 
-    fun updateLoc() {
+    private fun updateLoc() {
         synchronized(collider.box) {
             val newbox = collider.box.copyTo(x - width * 0.5, y - height * 0.5)
             collider.box = newbox

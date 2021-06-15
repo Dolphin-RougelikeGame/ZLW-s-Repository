@@ -1,6 +1,7 @@
-package magwer.dolphin.game
+package magwer.dolphin.game.`object`
 
 import magwer.dolphin.api.Coord
+import magwer.dolphin.game.GameScene
 import magwer.dolphin.game.room.RoomGrid
 
 abstract class GameObject(
