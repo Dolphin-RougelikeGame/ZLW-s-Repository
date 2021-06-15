@@ -10,6 +10,7 @@ import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -197,6 +198,8 @@ public class FightingDelegage{
 
     // 地图数组
     static RoomRemodel.SlotType[][] MapArray = new RoomRemodel.SlotType[27][15];
+    //设置章节记录
+    ChapterModel chapter = new ChapterModel();
 
     /**
      * @description 生成房间
@@ -222,13 +225,13 @@ public class FightingDelegage{
         RoomRemodel remodel = new RoomRemodel();
         switch (kind){
             case RoomRemodel.REWARD:
-                remodel.remodelTreasure(init_x, init_y);
+                remodel.remodelTreasure(init_x, init_y, chapter);
                 break;
             case RoomRemodel.NORMAL:
-                remodel.remodelNormal(init_x, init_y);
+                remodel.remodelNormal(init_x, init_y, chapter);
                 break;
             case RoomRemodel.BOSS:
-                remodel.remodelBoss(init_x, init_y);
+                remodel.remodelBoss(init_x, init_y, chapter);
                 break;
         }
     }
@@ -238,30 +241,35 @@ public class FightingDelegage{
         int init_x = border_x + room_width / 2;
         int init_y = border_y + room_height / 2;
 
-        // 调用makeRoom制作地图并加入障碍物
-        makeRoom();
-        roomRemodel(init_x, init_y, RoomRemodel.NORMAL);
+        // 确定房间个数
+        int numOfRooms = chapter.getSum();
 
-        // 房间2的开始
+        // 设置普通房
+        for (int i = 0; i < numOfRooms - 2; i++){
+            makeRoom();
+            roomRemodel(init_x, init_y, RoomRemodel.NORMAL);
+        }
+
+        // 设置boss房
         makeRoom();
         roomRemodel(init_x, init_y, RoomRemodel.BOSS);
-        // 房间2结束
 
-        // 房间3的开始
+        // 设置宝箱房
         makeRoom();
         roomRemodel(init_x, init_y, RoomRemodel.REWARD);
-        // 房间3的结束
 
         // 将存在MapArray中的地图画出来
-        for (int i = 0; i < map_width; i++){
-            for (int j = 0; j < map_height; j++){
-                int floorSize = 40;
-                if (MapArray[i][j] == RoomRemodel.SlotType.FLOOR)
-                    floors.add(new Floor(floorSize * i, floorSize * j, context));
-                if (MapArray[i][j] == RoomRemodel.SlotType.BAR)
-                    bars.add(new Bar(floorSize * i, floorSize * j, context));
-                if (MapArray[i][j] == RoomRemodel.SlotType.TREASURE)
-                    treasures.add(new Treasure(floorSize * i, floorSize * j, context));
+        for (int n = 0; n < chapter.getSum(); n++){
+            for (int i = 0; i < map_width; i++){
+                for (int j = 0; j < map_height; j++){
+                    int floorSize = 40;
+                    if (Objects.requireNonNull(chapter.getRooms().get(n)).getMatrix()[i][j] == RoomRemodel.SlotType.FLOOR)
+                        floors.add(new Floor(floorSize * i, floorSize * j, context));
+                    if (Objects.requireNonNull(chapter.getRooms().get(n)).getMatrix()[i][j] == RoomRemodel.SlotType.BAR)
+                        bars.add(new Bar(floorSize * i, floorSize * j, context));
+                    if (Objects.requireNonNull(chapter.getRooms().get(n)).getMatrix()[i][j] == RoomRemodel.SlotType.TREASURE)
+                        treasures.add(new Treasure(floorSize * i, floorSize * j, context));
+                }
             }
         }
 

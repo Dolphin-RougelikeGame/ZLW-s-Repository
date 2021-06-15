@@ -35,9 +35,9 @@ public class RoomRemodel {
         NONE
     }
 
-    //设置房间记录、章节记录
+    // 设置房间记录
     RoomModel room;
-    ChapterModel chapter = new ChapterModel();
+
 
     /**
      * @description 边界检测
@@ -64,7 +64,7 @@ public class RoomRemodel {
      * @param init_x     本房间中心X坐标
      * @param init_y     本房间中心Y坐标
      */
-    public void remodelNormal(int init_x, int init_y){
+    public void remodelNormal(int init_x, int init_y, ChapterModel chapter){
         if(boarderCheck(init_x, init_y, LARGE)){
             remodelLarge(init_x, init_y);
         }else if(boarderCheck(init_x, init_y, MIDDLE)){
@@ -82,7 +82,7 @@ public class RoomRemodel {
      * @param init_x     本房间中心X坐标
      * @param init_y     本房间中心Y坐标
      */
-    public void remodelTreasure(int init_x, int init_y){
+    public void remodelTreasure(int init_x, int init_y, ChapterModel chapter){
         MapArray[init_x][init_y] = SlotType.TREASURE;
         room = new RoomModel(MapArray);
         chapter.getRoom(room);
@@ -93,7 +93,7 @@ public class RoomRemodel {
      * @param init_x     本房间中心X坐标
      * @param init_y     本房间中心Y坐标
      */
-    public void remodelBoss(int init_x, int init_y){
+    public void remodelBoss(int init_x, int init_y, ChapterModel chapter){
         MapArray[init_x - 5][init_y + 1] = SlotType.BAR;
         MapArray[init_x - 5][init_y + 3] = SlotType.BAR;
         MapArray[init_x - 4][init_y + 2] = SlotType.BAR;
